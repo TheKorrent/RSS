@@ -1,0 +1,48 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version. e.g. v1.0.0"
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+          cache: 'maven'
+
+      - name: Update Maven Project Version
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+          
+        run: |
+          CLEAN_VERSION=${INPUT_VERSION#v}
+          mvn versions:set -DnewVersion="$CLEAN_VERSION" -DgenerateBackupPoms=false
+
+      - name: Build
+        run: mvn clean package -Dmaven.test.skip=true
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          tag_name: ${{ github.event.inputs.version }}
+          make_latest: true
+          files: |
+            target/io.github.thekorrent.rss.jar
+
+    permissions:
+      contents: write
+      packages: write
+      attestations: write
+      id-token: write

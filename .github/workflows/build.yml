@@ -1,0 +1,27 @@
+name: Build
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+          cache: 'maven'
+
+      - name: Build
+        run: mvn clean package
+
+      - name: Upload
+        uses: actions/upload-artifact@v6
+        with:
+          name: io.github.thekorrent.rss
+          path: target/io.github.thekorrent.rss.jar

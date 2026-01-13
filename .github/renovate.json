@@ -1,0 +1,10 @@
+{
+  "extends": ["config:base"],
+  "timezone": "Asia/Shanghai",
+  "schedule": ["* 0-3 * * *"],
+  "assignees": ["ShizukiNatsuki"],
+  "baseBranches": ["main"],
+  "rangeStrategy": "auto",
+  "prConcurrentLimit": 10,
+  "automerge": false
+}
