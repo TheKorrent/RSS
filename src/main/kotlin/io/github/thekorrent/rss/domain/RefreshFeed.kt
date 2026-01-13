@@ -86,7 +86,7 @@ class RefreshFeed {
             }
 
             if (client is QBittorrentClient) {
-                val response = client.addTorrent(torrentFile, savepath = feed.savePath, category = feed.category, tags = feed.tags.joinToString(",")).execute()
+                val response = client.addTorrent(torrentFile, savepath = feed.path, category = feed.category, tags = feed.tags.joinToString(",")).execute()
 
                 if (response.isSuccessful) {
                     downloaded.add(item.link)
