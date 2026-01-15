@@ -10,7 +10,6 @@ import java.io.File
 
 class RssPlugin(wrapper: PluginWrapper) : KorrentPlugin(wrapper) {
     companion object {
-        val pluginConfigManager get() = _pluginConfigManager
         val pluginDataManager get() = _pluginDataManager
         val config get() = _config
 
