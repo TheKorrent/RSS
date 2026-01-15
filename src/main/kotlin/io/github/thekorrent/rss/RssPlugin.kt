@@ -10,16 +10,18 @@ import java.io.File
 
 class RssPlugin(wrapper: PluginWrapper) : KorrentPlugin(wrapper) {
     companion object {
-        val pluginConfigManager get() = _pluginConfigManager
         val pluginDataManager get() = _pluginDataManager
+        val config get() = _config
 
         private var _pluginConfigManager = PluginConfigManager("null")
         private var _pluginDataManager = PluginDataManager("null")
+        private var _config = RssConfig()
     }
 
     init {
         _pluginConfigManager = this.pluginConfigManager
         _pluginDataManager = this.pluginDataManager
+        _config = _pluginConfigManager.load()
     }
 
     override fun start() {

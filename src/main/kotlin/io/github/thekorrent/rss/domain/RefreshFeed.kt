@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.google.common.eventbus.Subscribe
-import io.github.thekorrent.rss.RssConfig
 import io.github.thekorrent.rss.RssPlugin
+import io.github.thekorrent.rss.RssPlugin.Companion.config
 import io.github.thekorrent.rss.event.RefreshFeedScheduleEvent
 import io.github.thekorrent.rss.model.Feed
 import io.github.thekorrent.rss.model.Rss
@@ -23,6 +23,14 @@ import java.security.MessageDigest
 
 @KorrentEvent
 class RefreshFeed {
+    private val httpClient by lazy {
+        OkHttpClient.Builder().apply {
+            if (config.common.proxy.enabled) {
+                proxy(Proxy(config.common.proxy.type, InetSocketAddress(config.common.proxy.host, config.common.proxy.port)))
+            }
+        }.build()
+    }
+    
     @Subscribe
     fun refresh(event: RefreshFeedScheduleEvent) {
         val feeds = File(RssPlugin.pluginDataManager.pluginDataFolder, "feeds.json")
@@ -42,16 +50,6 @@ class RefreshFeed {
         return MessageDigest.getInstance("SHA-256").digest(input.toByteArray()).toHexString()
     }
 
-    private fun getHttpClient(): OkHttpClient {
-        val config = RssPlugin.pluginConfigManager.load(RssConfig::class.java)
-
-        return OkHttpClient.Builder().apply {
-            if (config.common.proxy.enabled) {
-                proxy(Proxy(config.common.proxy.type, InetSocketAddress(config.common.proxy.host, config.common.proxy.port)))
-            }
-        }.build()
-    }
-
     private fun downloadRss(client: BitTorrentClient, rss: Set<Rss>, feed: Feed) {
         val host = URI(feed.link).toURL().host
         val folder = File(File(RssPlugin.pluginDataManager.pluginDataFolder, "downloaded"), host).apply { mkdirs() }
@@ -62,8 +60,6 @@ class RefreshFeed {
         } else {
             emptySet<String>().toMutableSet()
         }
-
-        val httpClient = getHttpClient()
 
         for (item in rss) {
             val call = httpClient.newCall(Request.Builder().apply {
@@ -100,9 +96,7 @@ class RefreshFeed {
     }
 
     private fun fetchRssFromFeed(feed: Feed): Set<Rss> {
-        val client = getHttpClient()
-
-        val call = client.newCall(Request.Builder().apply {
+        val call = httpClient.newCall(Request.Builder().apply {
             url(feed.link)
         }.build())
 
