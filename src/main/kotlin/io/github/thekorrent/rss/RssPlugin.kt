@@ -22,7 +22,7 @@ class RssPlugin(wrapper: PluginWrapper) : KorrentPlugin(wrapper) {
     init {
         _pluginConfigManager = this.pluginConfigManager
         _pluginDataManager = this.pluginDataManager
-        _config = _pluginConfigManager.load(RssConfig::class.java)
+        _config = _pluginConfigManager.load()
     }
 
     override fun start() {

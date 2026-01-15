@@ -23,11 +23,13 @@ import java.security.MessageDigest
 
 @KorrentEvent
 class RefreshFeed {
-    private val httpClient = OkHttpClient.Builder().apply {
-        if (config.common.proxy.enabled) {
-            proxy(Proxy(config.common.proxy.type, InetSocketAddress(config.common.proxy.host, config.common.proxy.port)))
-        }
-    }.build()
+    private val httpClient by lazy {
+        OkHttpClient.Builder().apply {
+            if (config.common.proxy.enabled) {
+                proxy(Proxy(config.common.proxy.type, InetSocketAddress(config.common.proxy.host, config.common.proxy.port)))
+            }
+        }.build()
+    }
     
     @Subscribe
     fun refresh(event: RefreshFeedScheduleEvent) {
