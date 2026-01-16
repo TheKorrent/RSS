@@ -23,7 +23,7 @@
         <dependency>
             <groupId>moe.shizuki.korrent</groupId>
             <artifactId>korrent</artifactId>
-            <version>0.6.1</version>
+            <version>0.7.0</version>
             <scope>provided</scope>
         </dependency>
 
