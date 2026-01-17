@@ -1,10 +1,10 @@
 package io.github.thekorrent.rss
 
 import io.github.thekorrent.rss.model.Feed
+import moe.shizuki.korrent.defaultNullPluginConfigManager
+import moe.shizuki.korrent.defaultNullPluginDataManager
 import moe.shizuki.korrent.objectMapper
 import moe.shizuki.korrent.plugin.KorrentPlugin
-import moe.shizuki.korrent.plugin.config.PluginConfigManager
-import moe.shizuki.korrent.plugin.data.PluginDataManager
 import org.pf4j.PluginWrapper
 import java.io.File
 
@@ -13,8 +13,8 @@ class RssPlugin(wrapper: PluginWrapper) : KorrentPlugin(wrapper) {
         val pluginDataManager get() = _pluginDataManager
         val config get() = _config
 
-        private var _pluginConfigManager = PluginConfigManager("null")
-        private var _pluginDataManager = PluginDataManager("null")
+        private var _pluginConfigManager = defaultNullPluginConfigManager
+        private var _pluginDataManager = defaultNullPluginDataManager
         private var _config = RssConfig()
     }
 
