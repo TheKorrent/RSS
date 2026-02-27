@@ -21,7 +21,7 @@ jobs:
         run: mvn clean package
 
       - name: Upload
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: io.github.thekorrent.rss
           path: target/io.github.thekorrent.rss.jar
